@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 // import loading from "./loading";
 
 const formSchema = z.object({
@@ -24,6 +25,8 @@ const Page = () => {
   const [outputImg, setOutputImg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [inputPrompt, setInputPrompt] = useState<string>("");
+
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,8 +43,12 @@ const Page = () => {
         body: JSON.stringify(values),
       });
       const data = await response.json();
-      console.log(data.url);
-      setOutputImg(data.url);
+      if (response.status === 200) {
+        setOutputImg(data.url);
+      } else {
+        console.log(data.error);
+        toast({ variant: "destructive", description: data.error });
+      }
     } catch (error) {
       console.log(error);
     } finally {
