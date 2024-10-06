@@ -33,10 +33,12 @@ const Header = () => {
           <Button onClick={() => signOut()} variant="destructive">
             Logout
           </Button>
-          <Avatar>
-            <AvatarImage src={session?.user?.image || ""} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Link href="/profile">
+            <Avatar>
+              <AvatarImage src={session?.user?.image || ""} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       )}
     </div>
