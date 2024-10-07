@@ -21,7 +21,8 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="text-white/60 w-full text-center text-wrap sm:px-0 px-5"
         >
-          Generate stunning images from text using AI models for free.
+          Create breathtaking images from text with cutting-edge AI technology,
+          completely free.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
@@ -32,7 +33,7 @@ export default function Home() {
           <Link href="/create">
             {" "}
             <Button className="mt-5 py-5 text-base font-bold">
-              Start Creating
+              Start Crafting
             </Button>
           </Link>
         </motion.div>

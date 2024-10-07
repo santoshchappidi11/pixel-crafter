@@ -59,15 +59,16 @@ const Page = () => {
   return (
     <div className=" h-full w-full lg:mt-[60px] mt-[90px] flex justify-center items-start flex-col p-5">
       <div className="w-full py-2">
-        <h1 className="font-bold text-4xl text-center">Create</h1>
+        <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center text-white/60 my-1">
-          Generate stunning images from Text for FREE
+          Bring your ideas to life with AI-driven image creation, free of
+          charge!
         </p>
       </div>
       <div className="w-full h-full lg:flex gap-3 mt-0 lg:m-0">
         <div className="__form flex-[2] flex flex-col justify-center items-start gap-2 my-5">
           <p className="lg:text-left text-center w-full text-white/85 text-sm">
-            Type your prompt here to create any image you can imagine!
+            Type your idea and let AI craft the perfect image for you!
           </p>
           <div className="w-full flex gap-2 ">
             <Form {...form}>
@@ -82,7 +83,7 @@ const Page = () => {
                     <FormItem className="w-full lg:max-w-[70%]">
                       <FormControl>
                         <Input
-                          placeholder="a cat sitting on the sofa..."
+                          placeholder="Ever imagined a city underwater? Create it here!"
                           className="w-full transition-all border-white/30"
                           {...field}
                         />
