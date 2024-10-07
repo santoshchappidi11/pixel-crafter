@@ -55,7 +55,9 @@ const Page = () => {
                       width={250}
                       className="object-cover w-full rounded-md"
                     />
-                    <p className="text-white/70 text-center">{post.prompt}</p>
+                    <p className="dark:text-white/70 text-gray-600 text-center pt-2">
+                      {post.prompt}
+                    </p>
                   </motion.div>
                 );
               })}

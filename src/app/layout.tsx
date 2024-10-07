@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/toaster";
 import { Poppins } from "next/font/google";
+import { PixelCrafterProvider } from "./context/PixelCrafterContext";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700"], // weights
@@ -25,13 +26,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} dark:bg-gray-950 dark:text-white`}>
-        <ThemeProvider attribute="class" defaultTheme="dark">
-          <Provider>
-            <Header />
-            {children}
-            <Toaster />
-          </Provider>
-        </ThemeProvider>
+        <PixelCrafterProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <Provider>
+              <Header />
+              {children}
+              <Toaster />
+            </Provider>
+          </ThemeProvider>
+        </PixelCrafterProvider>
       </body>
     </html>
   );
