@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/Header";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/toaster";
+import { Poppins } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = Poppins({
+  weight: ["100", "200", "300", "400", "500", "600", "700"], // weights
+  subsets: ["latin"],
+  fallback: ["sans-serif"], // fallback font
 });
 
 export const metadata: Metadata = {
@@ -29,9 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative mx-auto`}
-      >
+      <body className={`${poppins.className} dark:bg-gray-950 dark:text-white`}>
         <ThemeProvider attribute="class" defaultTheme="dark">
           <Provider>
             <Header />

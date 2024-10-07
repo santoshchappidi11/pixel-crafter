@@ -57,16 +57,16 @@ const Page = () => {
   }
 
   return (
-    <div className="h-dvh w-full lg:mt-[60px] mt-[90px] flex justify-center items-start flex-col p-5">
+    <div className=" h-full w-full lg:mt-[60px] mt-[90px] flex justify-center items-start flex-col p-5">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Create</h1>
         <p className="text-center text-white/60 my-1">
           Generate stunning images from Text for FREE
         </p>
       </div>
-      <div className="w-full h-full lg:flex gap-3">
+      <div className="w-full h-full lg:flex gap-3 mt-0 lg:m-0">
         <div className="__form flex-[2] flex flex-col justify-center items-start gap-2 my-5">
-          <p className="lg:text-left text-center w-full text-white/80 text-sm">
+          <p className="lg:text-left text-center w-full text-white/85 text-sm">
             Type your prompt here to create any image you can imagine!
           </p>
           <div className="w-full flex gap-2 ">
@@ -83,7 +83,7 @@ const Page = () => {
                       <FormControl>
                         <Input
                           placeholder="a cat sitting on the sofa..."
-                          className="w-full transition-all"
+                          className="w-full transition-all border-white/30"
                           {...field}
                         />
                       </FormControl>
@@ -98,17 +98,17 @@ const Page = () => {
             </Form>
           </div>
         </div>
-        <div className="__output flex-[1] bg-white/5 rounded-lg relative overflow-hidden h-full">
+        <div className="__output flex-[1] justify-center items-center bg-white/5 rounded-lg relative overflow-hidden h-[500px] ">
           {outputImg ? (
             <Image
               src={outputImg}
               alt="result"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain "
               height={300}
               width={300}
             />
           ) : (
-            <div className="h-full w-full flex justify-center items-center text-white/70 p-3 border border-white">
+            <div className="w-full h-full flex justify-center items-center text-white/70 p-3">
               Enter your prompt and hit generate!
             </div>
           )}

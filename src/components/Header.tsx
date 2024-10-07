@@ -18,7 +18,7 @@ const Header = () => {
   }, [status, session]);
 
   return (
-    <div className="fixed top-0 w-full h-[60px] bg-black border-b border-white/60 p-3 flex justify-between items-center z-50">
+    <div className="fixed top-0 w-full h-[60px] bg-black/90 border-b border-white/25 p-3 flex justify-between items-center z-50">
       <Link href="/">
         <h2 className="font-bold text-xl">PixelCrafter</h2>
       </Link>
