@@ -73,3 +73,41 @@ export async function GET() {
   });
   return NextResponse.json(posts);
 }
+
+export async function DELETE(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { error: "You are Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  const { postId } = await request.json();
+
+  if (!postId) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "No user found!" }, { status: 401 });
+  }
+
+  try {
+    await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+
+    return NextResponse.json({ message: "Deleted successfully" });
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
+  }
+}

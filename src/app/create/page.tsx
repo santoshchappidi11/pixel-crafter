@@ -57,7 +57,7 @@ const Page = () => {
   }
 
   return (
-    <div className=" h-full w-full lg:mt-[60px] mt-[90px] flex justify-center items-start flex-col p-5">
+    <div className=" h-full w-full lg:mt-[60px] mt-[90px] flex justify-center items-start flex-col p-6">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center dark:text-white/60 text-gray-500 my-1">
@@ -65,7 +65,7 @@ const Page = () => {
           charge!
         </p>
       </div>
-      <div className="w-full h-full lg:flex gap-3 mt-0 lg:m-0">
+      <div className="w-full h-full lg:flex gap-3 lg:mt-6">
         <div className="__form flex-[2] flex flex-col justify-center items-start gap-2 my-5">
           <p className="lg:text-left text-center w-full dark:text-white/85 text-gray-800 text-sm">
             Type your idea and let AI craft the perfect image for you!
