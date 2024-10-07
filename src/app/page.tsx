@@ -19,7 +19,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-white/60"
+          className="text-white/60 w-full text-center text-wrap sm:px-0 px-5"
         >
           Generate stunning images from text using AI models for free.
         </motion.p>
