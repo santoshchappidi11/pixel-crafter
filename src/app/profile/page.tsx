@@ -57,11 +57,37 @@ const Page = () => {
     }
   }
 
+  async function handleDeleteAllPosts() {
+    try {
+      const response = await fetch("/api/image", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ deleteAll: true }),
+      });
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setPosts([]);
+        toast({ variant: "success", description: data.message });
+      } else {
+        console.log(data.error);
+        toast({ variant: "destructive", description: data.error });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({ variant: "destructive", description: "Something went wrong!" });
+    }
+  }
+
   return (
-    <>
+    <div className="pt-[72px]">
       {!isLoading && (
-        <div className="w-full flex justify-end items-center pt-[72px] px-3">
-          <Button variant="destructive">Delete All</Button>
+        <div className="w-full flex justify-end items-center px-3">
+          <Button variant="destructive" onClick={handleDeleteAllPosts}>
+            Delete All
+          </Button>
         </div>
       )}
       <div className="min-h-dvh w-full p-3 flex justify-center items-center flex-col">
@@ -131,7 +157,7 @@ const Page = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

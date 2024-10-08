@@ -74,6 +74,7 @@ export async function GET() {
   return NextResponse.json(posts);
 }
 
+// DELETE----> Delete a single post or all posts
 export async function DELETE(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -83,11 +84,7 @@ export async function DELETE(request: NextRequest) {
     );
   }
 
-  const { postId } = await request.json();
-
-  if (!postId) {
-    return NextResponse.json({ error: "ID is required" }, { status: 400 });
-  }
+  const { postId, deleteAll } = await request.json();
 
   const user = await prisma.user.findUnique({
     where: {
@@ -100,6 +97,21 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
+    // Check if deleteAll is true
+    if (deleteAll) {
+      await prisma.post.deleteMany({
+        where: {
+          userId: user.id,
+        },
+      });
+      return NextResponse.json({ message: "Deleted successfully!" });
+    }
+
+    // Otherwise, delete a single post
+    if (!postId) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
     await prisma.post.delete({
       where: {
         id: postId,

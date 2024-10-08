@@ -65,7 +65,7 @@ const Page = () => {
           charge!
         </p>
       </div>
-      <div className="w-full h-full lg:flex gap-3 lg:mt-6">
+      <div className="w-full h-full lg:flex gap-3">
         <div className="__form flex-[2] flex flex-col justify-center items-start gap-2 my-5">
           <p className="lg:text-left text-center w-full dark:text-white/85 text-gray-800 text-sm">
             Type your idea and let AI craft the perfect image for you!
@@ -92,22 +92,28 @@ const Page = () => {
                     </FormItem>
                   )}
                 />
-                <Button loading={isLoading} type="submit">
-                  Generate
-                </Button>
+                {isLoading ? (
+                  <Button loading={isLoading} type="submit">
+                    Generating...
+                  </Button>
+                ) : (
+                  <Button type="submit">Generate</Button>
+                )}
               </form>
             </Form>
           </div>
         </div>
-        <div className="__output flex-[1] justify-center items-center dark:bg-white/5 bg-gray-100 rounded-lg relative overflow-hidden h-[500px] ">
+        <div className="__output flex-[1] justify-center items-center dark:bg-white/5 bg-gray-100 rounded-lg relative h-[500px] ">
           {outputImg ? (
-            <Image
-              src={outputImg}
-              alt="result"
-              className="w-full h-full object-contain rounded-lg"
-              height={300}
-              width={300}
-            />
+            <div className="relative w-full h-full rounded-xl overflow-hidden">
+              <Image
+                src={outputImg}
+                alt="result"
+                className="object-contain"
+                fill
+                sizes="100vw"
+              />
+            </div>
           ) : (
             <div className="w-full h-full flex justify-center items-center dark:text-white/70 text-gray-500 p-3">
               Enter your prompt and hit generate!
