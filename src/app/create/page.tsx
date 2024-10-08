@@ -104,7 +104,7 @@ const Page = () => {
             <Image
               src={outputImg}
               alt="result"
-              className="w-full h-full object-contain "
+              className="w-full h-full object-contain rounded-lg"
               height={300}
               width={300}
             />
