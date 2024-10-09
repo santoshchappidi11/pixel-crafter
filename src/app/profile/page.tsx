@@ -32,7 +32,7 @@ const Page = () => {
         </div>
         <div className="__Profile_Details w-auto px-5">
           <div className="grid sm:grid-cols-2 gap-4 my-8 sm:text-left text-center">
-            <label className="text-gray-400 sm:justify-start justify-center">
+            <label className="dark:text-gray-400 text-gray-500 sm:justify-start justify-center">
               Email:
             </label>
             <p className="sm:justify-start justify-center">
@@ -40,7 +40,7 @@ const Page = () => {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4 my-8 sm:text-left text-center">
-            <label className="text-gray-400 sm:justify-start justify-center">
+            <label className="dark:text-gray-400 text-gray-500 sm:justify-start justify-center">
               Name:
             </label>
             <p className="sm:justify-start justify-center">
@@ -48,7 +48,7 @@ const Page = () => {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4 my-8 sm:text-left text-center">
-            <label className="text-gray-400 sm:justify-start justify-center">
+            <label className="dark:text-gray-400 text-gray-500 sm:justify-start justify-center">
               Account Created:
             </label>
             <p className="sm:justify-start justify-center">
