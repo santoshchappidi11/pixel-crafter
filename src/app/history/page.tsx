@@ -141,7 +141,15 @@ const Page = () => {
                             />
                           )}
                         </div>
-                        <p className="dark:text-white/70 text-gray-600 text-center pt-2">
+                        <div className="text-sm text-gray-500 flex justify-end items-center w-auto pt-2 ">
+                          {" "}
+                          <span className="border dark:border-gray-800 dark:bg-gray-900 bg-gray-100  px-1 rounded-md">
+                            {new Date(post.createdAt).toLocaleDateString(
+                              "en-CA"
+                            )}
+                          </span>
+                        </div>
+                        <p className="dark:text-white/70 text-gray-700 text-center pt-1">
                           {post.prompt}
                         </p>
                       </motion.div>
