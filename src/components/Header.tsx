@@ -9,6 +9,10 @@ import { BiLoaderCircle } from "react-icons/bi";
 import { IoSunnyOutline } from "react-icons/io5";
 import { IoMoonOutline } from "react-icons/io5";
 import { useMyContext } from "@/app/context/PixelCrafterContext";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { IoMdSettings } from "react-icons/io";
+import { MdHistory } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
 
 const Header = () => {
   const { setIsDarkMode } = useMyContext();
@@ -82,7 +86,36 @@ const Header = () => {
                 <AvatarImage src={session?.user?.image || ""} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-            </Link>
+            </Link>{" "}
+            <div>
+              <HoverCard>
+                <HoverCardTrigger>
+                  <IoMdSettings
+                    size={30}
+                    className="hover:animate-spin-once cursor-pointer dark:text-gray-300 dark:hover:text-white transition-all"
+                  />
+                </HoverCardTrigger>
+
+                <HoverCardContent>
+                  <div className="flex flex-col space-y-2 justify-start items-center w-full">
+                    <Link
+                      href="/history"
+                      className="dark:hover:bg-gray-900 hover:bg-gray-100 p-2 rounded-md flex justify-start items-center w-full"
+                    >
+                      <MdHistory className="mx-2" size={20} />
+                      History
+                    </Link>
+                    <Link
+                      href="/profile"
+                      className="dark:hover:bg-gray-900 hover:bg-gray-100  p-2 rounded-md flex justify-start items-center w-full"
+                    >
+                      <CgProfile className="mx-2" size={18} />
+                      Your Profile
+                    </Link>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
           </>
         )}
       </div>

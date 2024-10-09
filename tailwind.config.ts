@@ -56,6 +56,16 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
+      keyframes: {
+        spinOnce: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(180deg)" },
+        },
+      },
+      animation: {
+        "spin-once": "spinOnce 0.8s ease-in-out 1",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
