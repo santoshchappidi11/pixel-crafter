@@ -64,7 +64,7 @@ const config: Config = {
         },
       },
       animation: {
-        "spin-once": "spinOnce 0.8s ease-in-out 1",
+        "spin-once": "spinOnce 0.6s ease-in-out 1",
       },
     },
   },
