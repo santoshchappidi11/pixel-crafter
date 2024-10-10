@@ -15,23 +15,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 // import loading from "./loading";
 
 const formSchema = z.object({
   prompt: z.string().min(7, { message: "prompt must be 7 characters long!" }),
+  model: z.string().optional(),
 });
 
 const Page = () => {
   const [outputImg, setOutputImg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [inputPrompt, setInputPrompt] = useState<string>("");
-
+  const [selectedModel, setSelectedModel] = useState<string>("flux");
   const { toast } = useToast();
+
+  // Array of model options
+  const modelOptions = [
+    "flux",
+    "flux-realism",
+    "flux-cablyai",
+    "flux-anime",
+    "flux-3d",
+    "any-dark",
+    "flux-pro",
+    "turbo",
+  ];
+
+  const handleSelectModel = (model: string) => {
+    setSelectedModel(model);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
+      model: selectedModel,
     },
   });
 
@@ -40,7 +66,7 @@ const Page = () => {
       setIsLoading(true);
       const response = await fetch("/api/image", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, model: selectedModel }),
       });
       const data = await response.json();
       if (response.status === 200) {
@@ -102,6 +128,25 @@ const Page = () => {
               </form>
             </Form>
           </div>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger>Select Model</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Models</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+
+              {modelOptions.map((model) => (
+                <DropdownMenuItem
+                  key={model}
+                  onClick={() => handleSelectModel(model)}
+                >
+                  {model}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+
+            <p className="mt-2">Selected Model: {selectedModel}</p>
+          </DropdownMenu>
         </div>
         <div className="__output flex-[1] justify-center items-center dark:bg-white/5 bg-gray-100 rounded-lg relative h-[500px] ">
           {outputImg ? (

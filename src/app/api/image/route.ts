@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { prompt } = await request.json();
+  const { prompt, model = "flux" } = await request.json();
 
   const user = await prisma.user.findUnique({
     where: {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   const randomSeed = generateRandomNumber();
   const imageURL = `https://image.pollinations.ai/prompt/${encodeURIComponent(
     prompt
-  )}?seed=${randomSeed}&width=512&height=512&nologo=True`;
+  )}?model=${model}&seed=${randomSeed}&width=512&height=512&nologo=True`;
 
   await fetch(imageURL);
 
