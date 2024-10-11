@@ -157,7 +157,7 @@ const Page = () => {
                   })}
                 </AnimatePresence>
               ) : (
-                <div className="w-full col-span-full flex justify-center items-center text-white/70">
+                <div className="w-full col-span-full flex justify-center items-center dark:text-white/70">
                   No history!
                 </div>
               )}
