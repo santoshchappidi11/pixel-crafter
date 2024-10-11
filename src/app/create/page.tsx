@@ -1,5 +1,6 @@
 "use client";
 
+import { modelsData } from "@/data/data";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMyContext } from "../context/PixelCrafterContext";
+import { FaArrowLeft } from "react-icons/fa";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -78,6 +80,16 @@ const Page = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const handleOpenSetting = () => {
+    setIsShowOverlay(true);
+  };
+
+  const handleCloseSetting = () => {
+    setIsShowOverlay(false);
+  };
+
+  const handleSelectedModel = () => {};
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -151,6 +163,7 @@ const Page = () => {
                         <div className="flex justify-center items-center h-full w-auto pb-2 px-2">
                           {" "}
                           <IoMdSettings
+                            onClick={handleOpenSetting}
                             size={30}
                             className="hover:animate-spin-once cursor-pointer dark:text-gray-300 dark:hover:text-gray-200 transition-all"
                           />
@@ -265,7 +278,7 @@ const Page = () => {
                                 alt={post.prompt}
                                 height={450}
                                 width={450}
-                                className="object-cover h-full w-full rounded-md "
+                                className="object-cover h-full w-full rounded-md"
                               />
                             </div>
                             <div className="text-gray-500 flex justify-end items-center w-auto">
@@ -293,7 +306,61 @@ const Page = () => {
       </div>
 
       {isShowOverlay && (
-        <div className="absolute h-full w-1/2 bg-white opacity-50 top-0 right-0 z-10"></div>
+        <div className="absolute h-full w-1/2 bg-black top-0 right-0 z-10 overflow-y-auto custom-scrollbar">
+          <div className="__exit_arrow border border-black mt-[20px] px-5">
+            <FaArrowLeft
+              className="cursor-pointer text-white"
+              size={25}
+              onClick={handleCloseSetting}
+            />
+          </div>
+          <div className="__Models w-full h-auto rounded-lg grid grid-cols-3 place-items-start gap-3 p-5">
+            {modelsData?.length ? (
+              <AnimatePresence mode="wait">
+                {modelsData.map((model, index) => {
+                  return (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        scale: 0.9,
+                        filter: "blur(10px)",
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        filter: "blur(0px)",
+                      }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      onClick={handleSelectedModel}
+                      key={model.id}
+                      className="h-auto w-full cursor-pointer p-2 rounded-lg border border-gray-700"
+                    >
+                      <div>
+                        <Image
+                          src={model.image}
+                          alt={model.title}
+                          height={350}
+                          width={350}
+                          className="h-full w-full object-cover rounded-lg border"
+                        />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-medium text-gray-300">
+                          {model.title}
+                        </h2>
+                        <p className="text-xs font-normal text-gray-400">
+                          {model.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
