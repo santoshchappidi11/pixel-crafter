@@ -33,7 +33,14 @@ export async function POST(request: NextRequest) {
     prompt
   )}?model=${model}&seed=${randomSeed}&width=512&height=512&nologo=True`;
 
-  await fetch(imageURL);
+  const response = await fetch(imageURL);
+  if (!response.ok) {
+    console.error(`Error: ${response.status} ${response.statusText}`);
+    return NextResponse.json(
+      { error: `Image generation failed with status ${response.status}` },
+      { status: 500 }
+    );
+  }
 
   await prisma.post.create({
     data: {

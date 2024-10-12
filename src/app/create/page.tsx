@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { IoMdSettings } from "react-icons/io";
 import { Post } from "@prisma/client";
@@ -22,17 +22,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMyContext } from "../context/PixelCrafterContext";
-import { FaArrowLeft } from "react-icons/fa";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+import { FaArrowLeft } from "react-icons/fa6";
 
-// import loading from "./loading";
+interface Model {
+  id: number;
+  title: string;
+  image: StaticImageData;
+  description: string;
+}
 
 const formSchema = z.object({
   prompt: z.string().min(7, { message: "prompt must be 7 characters long!" }),
@@ -46,27 +43,15 @@ const Page = () => {
   const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false);
-  // const [selectedModel, setSelectedModel] = useState<string>("flux");
-
-  //Model options
-  // const modelOptions = [
-  //   "flux",
-  //   "flux-realism",
-  //   "flux-cablyai",
-  //   "flux-anime",
-  //   "flux-3d",
-  //   "any-dark",
-  //   "flux-pro",
-  //   "turbo",
-  // ];
-
-  // const handleSelectModel = (model: string) => {
-  //   setSelectedModel(model);
-  // };
+  const [selectedModel, setSelectedModel] = useState<string>("flux");
+  const [selectedModelColor, setSelectedModelColor] = useState<string | null>(
+    null
+  );
+  const [userSearchedModel, setUserSearchedModel] = useState<string>("");
+  const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
 
   const fetchPosts = async () => {
     try {
-      // setIsLoading(true);
       const response = await fetch("/api/image");
       const data = await response.json();
       setPosts(data);
@@ -76,6 +61,22 @@ const Page = () => {
       // setIsLoading(false);
     }
   };
+
+  const handleSearchModelPrompt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserSearchedModel(e.target.value);
+  };
+
+  useEffect(() => {
+    if (userSearchedModel !== "") {
+      const finalModel = modelsData.filter((model) =>
+        model?.title?.toLowerCase()?.includes(userSearchedModel.toLowerCase())
+      );
+
+      setFilteredModelsData(finalModel);
+    } else {
+      setFilteredModelsData(modelsData);
+    }
+  }, [userSearchedModel]);
 
   useEffect(() => {
     fetchPosts();
@@ -87,15 +88,20 @@ const Page = () => {
 
   const handleCloseSetting = () => {
     setIsShowOverlay(false);
+    setFilteredModelsData(modelsData);
   };
 
-  const handleSelectedModel = () => {};
+  const handleSelectedModel = (modelName: string) => {
+    const modifiedModel = modelName.toLowerCase();
+    setSelectedModel(modifiedModel);
+    setSelectedModelColor(modelName);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
-      // model: selectedModel,
+      model: selectedModel,
     },
   });
 
@@ -106,10 +112,12 @@ const Page = () => {
         method: "POST",
         body: JSON.stringify({
           ...values,
-          // model: selectedModel
+          model: selectedModel,
         }),
       });
+      console.log(response, "response here");
       const data = await response.json();
+      console.log(data, "data here");
       if (response.status === 200) {
         setOutputImg(data.url);
         await fetchPosts();
@@ -192,27 +200,8 @@ const Page = () => {
               </form>
             </Form>
           </div>
-
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger>Select Model</DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Models</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-
-              {modelOptions.map((model) => (
-                <DropdownMenuItem
-                  key={model}
-                  onClick={() => handleSelectModel(model)}
-                >
-                  {model}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-
-            <p className="mt-2">Selected Model: {selectedModel}</p>
-          </DropdownMenu> */}
         </div>
-        <div className="__output flex-[1] xl:flex justify-between items-start dark:bg-white/5 bg-gray-100 rounded-lg relative xl:h-[700px] h-auto p-5">
+        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-white/5 bg-gray-100 rounded-lg relative xl:h-[650px] h-auto p-5">
           {!outputImg ? (
             <>
               {!isLoading ? (
@@ -230,7 +219,6 @@ const Page = () => {
                     className="absolute top-0 left-0 z-10"
                   />
 
-                  {/* Generating text */}
                   <span className="relative z-20 text-lg font-medium text-gray-600 dark:text-white">
                     Generating...
                   </span>
@@ -306,18 +294,24 @@ const Page = () => {
       </div>
 
       {isShowOverlay && (
-        <div className="absolute h-full w-1/2 bg-black top-0 right-0 z-10 overflow-y-auto custom-scrollbar">
-          <div className="__exit_arrow border border-black mt-[20px] px-5">
+        <div className="absolute h-full xl:w-1/2 dark:bg-black bg-gray-50/90 xl:top-[-20px] top-[-30px] right-0 z-10  overflow-y-auto custom-scrollbar">
+          <div className="__exit_arrow  mt-[20px] px-5">
             <FaArrowLeft
-              className="cursor-pointer text-white"
-              size={25}
+              className="cursor-pointer dark:text-white my-5"
+              size={20}
               onClick={handleCloseSetting}
             />
+
+            <Input
+              placeholder="Search Model Name..."
+              className="w-full h-9 transition-all dark:border-gray-400 border border-gray-500  text-gray-900 outline-none bg-white"
+              onChange={handleSearchModelPrompt}
+            />
           </div>
-          <div className="__Models w-full h-auto rounded-lg grid grid-cols-3 place-items-start gap-3 p-5">
-            {modelsData?.length ? (
+          <div className="__Models w-full h-auto rounded-lg grid xl:grid-cols-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] place-items-start gap-3 p-5">
+            {filteredModelsData?.length ? (
               <AnimatePresence mode="wait">
-                {modelsData.map((model, index) => {
+                {filteredModelsData.map((model, index) => {
                   return (
                     <motion.div
                       initial={{
@@ -331,9 +325,13 @@ const Page = () => {
                         filter: "blur(0px)",
                       }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
-                      onClick={handleSelectedModel}
+                      onClick={() => handleSelectedModel(model.title)}
                       key={model.id}
-                      className="h-auto w-full cursor-pointer p-2 rounded-lg border border-gray-700"
+                      className={`h-auto w-full cursor-pointer p-2 rounded-lg border dark:border-gray-700 border-gray-400 ${
+                        selectedModelColor == model.title
+                          ? "border-4 dark:border-blue-500 border-blue-700"
+                          : "dark:border-gray-700 border-gray-400"
+                      }`}
                     >
                       <div>
                         <Image
@@ -345,10 +343,10 @@ const Page = () => {
                         />
                       </div>
                       <div>
-                        <h2 className="text-lg font-medium text-gray-300">
-                          {model.title}
+                        <h2 className="text-lg font-semibold dark:text-gray-300">
+                          {model.title.replace(/-/g, " ")}
                         </h2>
-                        <p className="text-xs font-normal text-gray-400">
+                        <p className="text-xs font-normal dark:text-gray-400 text-gray-600">
                           {model.description}
                         </p>
                       </div>
