@@ -67,6 +67,20 @@ const Page = () => {
   };
 
   useEffect(() => {
+    if (isShowOverlay) {
+      // Adding class to hide horizontal overflow when the overlay opens
+      document.body.classList.add("overflow-x-hidden");
+    } else {
+      // Wait for the closing animation to finish before removing the class
+      const timer = setTimeout(() => {
+        document.body.classList.remove("overflow-x-hidden");
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isShowOverlay]);
+
+  useEffect(() => {
     if (userSearchedModel !== "") {
       const finalModel = modelsData.filter((model) =>
         model?.title?.toLowerCase()?.includes(userSearchedModel.toLowerCase())
@@ -136,7 +150,7 @@ const Page = () => {
   const skeletonHighlightColor = isDarkMode == "dark" ? "#444444" : "#f5f5f5"; // Dark mode highlight color
 
   return (
-    <div className="h-full w-full lg:mt-[80px] mt-[90px] flex justify-center items-start flex-col p-6 relative">
+    <div className="h-full w-full lg:mt-[80px] mt-[90px] flex justify-center items-start flex-col p-6 relative ">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center dark:text-white/60 text-gray-500 my-1">
@@ -185,14 +199,14 @@ const Page = () => {
                   <Button
                     loading={isLoading}
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-orange-400 text-white"
+                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-purple-500 text-white"
                   >
                     Generating...
                   </Button>
                 ) : (
                   <Button
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-orange-400/70 hover:bg-orange-400 text-white"
+                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-purple-500/80 hover:bg-purple-500 text-white"
                   >
                     Generate
                   </Button>
@@ -293,73 +307,82 @@ const Page = () => {
         </div>
       </div>
 
-      {isShowOverlay && (
-        <div className="absolute h-full xl:w-1/2 dark:bg-black bg-gray-50/90 xl:top-[-20px] top-[-30px] right-0 z-10  overflow-y-auto custom-scrollbar">
-          <div className="__exit_arrow  mt-[20px] px-5">
-            <FaArrowLeft
-              className="cursor-pointer dark:text-white my-5"
-              size={20}
-              onClick={handleCloseSetting}
-            />
+      <AnimatePresence>
+        {isShowOverlay && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3 }}
+            className={`${
+              isShowOverlay ? "overflow-hidden" : "overflow-auto"
+            } fixed h-full w-full dark:bg-black bg-gray-50/90 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
+          >
+            <div className="__exit_arrow  mt-[20px] px-5">
+              <FaArrowLeft
+                className="cursor-pointer dark:text-white my-5"
+                size={20}
+                onClick={handleCloseSetting}
+              />
 
-            <Input
-              placeholder="Search Model Name..."
-              className="w-full h-9 transition-all dark:border-gray-400 border border-gray-500  text-gray-900 outline-none bg-white"
-              onChange={handleSearchModelPrompt}
-            />
-          </div>
-          <div className="__Models w-full h-auto rounded-lg grid xl:grid-cols-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] place-items-start gap-3 p-5">
-            {filteredModelsData?.length ? (
-              <AnimatePresence mode="wait">
-                {filteredModelsData.map((model, index) => {
-                  return (
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        scale: 0.9,
-                        filter: "blur(10px)",
-                      }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                        filter: "blur(0px)",
-                      }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      onClick={() => handleSelectedModel(model.title)}
-                      key={model.id}
-                      className={`h-auto w-full cursor-pointer p-2 rounded-lg border dark:border-gray-700 border-gray-400 ${
-                        selectedModelColor == model.title
-                          ? "border-4 dark:border-blue-500 border-blue-700"
-                          : "dark:border-gray-700 border-gray-400"
-                      }`}
-                    >
-                      <div>
-                        <Image
-                          src={model.image}
-                          alt={model.title}
-                          height={350}
-                          width={350}
-                          className="h-full w-full object-cover rounded-lg border"
-                        />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-semibold dark:text-gray-300">
-                          {model.title.replace(/-/g, " ")}
-                        </h2>
-                        <p className="text-xs font-normal dark:text-gray-400 text-gray-600">
-                          {model.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-      )}
+              <Input
+                placeholder="Search Model Name..."
+                className="sm:w-4/5 lg:w-1/2 h-9 m-auto transition-all placeholder:text-gray-400 dark:border-gray-400 border border-gray-500  text-gray-900 outline-none bg-white"
+                onChange={handleSearchModelPrompt}
+              />
+            </div>
+            <div className="__Models w-full h-auto rounded-lg grid xl:grid-cols-5 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] place-items-start gap-3 p-5">
+              {filteredModelsData?.length ? (
+                <AnimatePresence mode="wait">
+                  {filteredModelsData.map((model, index) => {
+                    return (
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          scale: 0.9,
+                          filter: "blur(10px)",
+                        }}
+                        animate={{
+                          opacity: 1,
+                          scale: 1,
+                          filter: "blur(0px)",
+                        }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        onClick={() => handleSelectedModel(model.title)}
+                        key={model.id}
+                        className={`h-auto w-full cursor-pointer p-2 rounded-lg  border ${
+                          selectedModelColor == model.title &&
+                          "border-4 dark:border-blue-500 border-blue-700"
+                        }`}
+                      >
+                        <div>
+                          <Image
+                            src={model.image}
+                            alt={model.title}
+                            height={350}
+                            width={350}
+                            className="h-full w-full object-cover rounded-lg border"
+                          />
+                        </div>
+                        <div>
+                          <h2 className="text-lg font-semibold dark:text-gray-300">
+                            {model.title.replace(/-/g, " ")}
+                          </h2>
+                          <p className="text-xs font-normal dark:text-gray-400 text-gray-600">
+                            {model.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              ) : (
+                <></>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
