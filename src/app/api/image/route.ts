@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await prisma.post.create({
+  const newPost = await prisma.post.create({
     data: {
       userId: user.id,
       prompt: prompt,
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json({ url: imageURL });
+  return NextResponse.json({ post: newPost });
 }
 
 export async function GET() {

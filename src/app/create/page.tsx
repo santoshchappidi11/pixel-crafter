@@ -31,6 +31,16 @@ interface Model {
   description: string;
 }
 
+interface postDetailsModel {
+  prompt: string;
+  id: string;
+  seed: number;
+  url: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const formSchema = z.object({
   prompt: z.string().min(7, { message: "prompt must be 7 characters long!" }),
   model: z.string().optional(),
@@ -38,15 +48,18 @@ const formSchema = z.object({
 
 const Page = () => {
   const { isDarkMode } = useMyContext();
-  const [outputImg, setOutputImg] = useState<string | null>(null);
+  const [outputImg, setOutputImg] = useState<postDetailsModel>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false);
+  const [isShwoModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string>("flux");
   const [selectedModelColor, setSelectedModelColor] = useState<string | null>(
     null
   );
+  const [isShowDescriptionOverlay, setIsShowDescriptionOverlay] =
+    useState<boolean>(false);
+  const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
 
@@ -67,7 +80,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (isShowOverlay) {
+    if (isShwoModelOverlay) {
       // Adding class to hide horizontal overflow when the overlay opens
       document.body.classList.add("overflow-x-hidden");
     } else {
@@ -78,7 +91,7 @@ const Page = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [isShowOverlay]);
+  }, [isShwoModelOverlay]);
 
   useEffect(() => {
     if (userSearchedModel !== "") {
@@ -97,11 +110,12 @@ const Page = () => {
   }, []);
 
   const handleOpenSetting = () => {
-    setIsShowOverlay(true);
+    setIsShowModelOverlay(true);
   };
 
   const handleCloseSetting = () => {
-    setIsShowOverlay(false);
+    setIsShowModelOverlay(false);
+    setIsShowDescriptionOverlay(false);
     setFilteredModelsData(modelsData);
   };
 
@@ -109,6 +123,12 @@ const Page = () => {
     const modifiedModel = modelName.toLowerCase();
     setSelectedModel(modifiedModel);
     setSelectedModelColor(modelName);
+  };
+
+  const handleImageDetails = (postId: string) => {
+    setIsShowDescriptionOverlay(true);
+    const postDetails = posts?.find((post) => post.id === postId);
+    setPostDetailsData(postDetails);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -129,11 +149,11 @@ const Page = () => {
           model: selectedModel,
         }),
       });
-      console.log(response, "response here");
+
       const data = await response.json();
       console.log(data, "data here");
       if (response.status === 200) {
-        setOutputImg(data.url);
+        setOutputImg(data.post);
         await fetchPosts();
       } else {
         console.log(data.error);
@@ -242,13 +262,14 @@ const Page = () => {
           ) : (
             <>
               {" "}
-              <div className="__Main_output relative xl:w-[38%] xl:h-full h-[500px] rounded-xl overflow-hidden ">
+              <div className="__Main_output relative xl:w-[38%] xl:h-full h-[500px] rounded-xl overflow-hidden">
                 <Image
-                  src={outputImg ? outputImg : ""}
+                  src={outputImg?.url ? outputImg?.url : ""}
                   alt="result"
-                  className="object-contain"
+                  className="object-contain cursor-pointer"
                   fill
                   sizes="100vw"
+                  onClick={() => handleImageDetails(outputImg?.id)}
                 />
               </div>
               <div className="__prev_output xl:w-[60%] xl:m-0 mt-5">
@@ -308,14 +329,14 @@ const Page = () => {
       </div>
 
       <AnimatePresence>
-        {isShowOverlay && (
+        {isShwoModelOverlay && (
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.3 }}
             className={`${
-              isShowOverlay ? "overflow-hidden" : "overflow-auto"
+              isShwoModelOverlay ? "overflow-hidden" : "overflow-auto"
             } fixed h-full w-full dark:bg-black bg-gray-50/90 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
           >
             <div className="__exit_arrow  mt-[20px] px-5">
@@ -379,6 +400,61 @@ const Page = () => {
               ) : (
                 <></>
               )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isShowDescriptionOverlay && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-0 h-full w-full dark:bg-black bg-gray-50/90  right-0 z-10 p-5"
+          >
+            <div className="__exit_arrow">
+              <FaArrowLeft
+                className="cursor-pointer dark:text-white my-5"
+                size={20}
+                onClick={handleCloseSetting}
+              />
+            </div>
+            <div className="sticky h-3/4 border border-green-600">
+              {" "}
+              <div className="__image_description h-full w-full flex justify-between items-center ">
+                <div className="__left w-3/5 h-full border border-black">
+                  <Image
+                    src={postDetailsData?.url ? postDetailsData.url : ""}
+                    alt={postDetailsData?.prompt ? postDetailsData.prompt : ""}
+                    width={500}
+                    height={500}
+                    className="h-full w-full object-contain rounded-lg border border-black"
+                  />
+                </div>
+                <div className="__right w-2/5 h-full border border-red-600">
+                  <div className="flex w-3/4 justify-between items-center ">
+                    <label className="w-1/2">Prompt:</label>
+                    <h2 className="w-1/2">{postDetailsData?.prompt}</h2>
+                  </div>
+                  <div className="flex w-3/4 justify-between items-center">
+                    <label className="w-1/2">Created At:</label>
+                    <p className="w-1/2">
+                      {" "}
+                      {new Date(
+                        postDetailsData?.createdAt
+                          ? postDetailsData.createdAt
+                          : ""
+                      ).toLocaleDateString("en-CA")}
+                    </p>
+                  </div>
+                  <div className="flex w-3/4 justify-between items-center">
+                    <label className="w-1/2">Selected Model:</label>
+                    <p className="w-1/2">{selectedModel}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
