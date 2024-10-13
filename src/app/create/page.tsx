@@ -23,6 +23,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMyContext } from "../context/PixelCrafterContext";
 import { FaArrowLeft } from "react-icons/fa6";
+import { FaDownload } from "react-icons/fa";
 
 interface Model {
   id: number;
@@ -39,6 +40,7 @@ interface postDetailsModel {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  modelName: string;
 }
 
 const formSchema = z.object({
@@ -53,15 +55,17 @@ const Page = () => {
   const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isShwoModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
-  const [selectedModel, setSelectedModel] = useState<string>("flux");
+  const [selectedModel, setSelectedModel] = useState<Model>();
   const [selectedModelColor, setSelectedModelColor] = useState<string | null>(
     null
   );
+  const [generatedImageModel, setGeneratedImageModel] = useState<Model>();
   const [isShowDescriptionOverlay, setIsShowDescriptionOverlay] =
     useState<boolean>(false);
   const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
+  console.log(generatedImageModel, "image model");
 
   const fetchPosts = async () => {
     try {
@@ -87,7 +91,7 @@ const Page = () => {
       // Wait for the closing animation to finish before removing the class
       const timer = setTimeout(() => {
         document.body.classList.remove("overflow-x-hidden");
-      }, 500);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
@@ -119,23 +123,29 @@ const Page = () => {
     setFilteredModelsData(modelsData);
   };
 
-  const handleSelectedModel = (modelName: string) => {
-    const modifiedModel = modelName.toLowerCase();
-    setSelectedModel(modifiedModel);
-    setSelectedModelColor(modelName);
+  const handleSelectedModel = (modelName: Model) => {
+    setSelectedModel(modelName);
+    setSelectedModelColor(modelName.title);
   };
 
   const handleImageDetails = (postId: string) => {
     setIsShowDescriptionOverlay(true);
+
     const postDetails = posts?.find((post) => post.id === postId);
     setPostDetailsData(postDetails);
+
+    const modelDetails = modelsData.find(
+      (model) => model?.title.toLowerCase() === outputImg?.modelName
+    );
+    console.log(outputImg, "output image here");
+    setGeneratedImageModel(modelDetails);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
-      model: selectedModel,
+      model: selectedModel?.title.toLowerCase(),
     },
   });
 
@@ -146,7 +156,7 @@ const Page = () => {
         method: "POST",
         body: JSON.stringify({
           ...values,
-          model: selectedModel,
+          model: selectedModel?.title.toLowerCase(),
         }),
       });
 
@@ -306,7 +316,7 @@ const Page = () => {
                             </div>
                             <div className="text-gray-500 flex justify-end items-center w-auto">
                               {" "}
-                              <span className="border dark:border-gray-800 dark:bg-gray-900 bg-gray-100  px-1 rounded-md text-xs">
+                              <span className="border dark:border-gray-800 dark:bg-gray-900 bg-gray-100  px-2 rounded-md text-xs">
                                 {new Date(post.createdAt).toLocaleDateString(
                                   "en-CA"
                                 )}
@@ -369,7 +379,7 @@ const Page = () => {
                           filter: "blur(0px)",
                         }}
                         transition={{ duration: 0.3, delay: index * 0.1 }}
-                        onClick={() => handleSelectedModel(model.title)}
+                        onClick={() => handleSelectedModel(model)}
                         key={model.id}
                         className={`h-auto w-full cursor-pointer p-2 rounded-lg  border ${
                           selectedModelColor == model.title &&
@@ -412,7 +422,7 @@ const Page = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.3 }}
-            className="fixed top-0 h-full w-full dark:bg-black bg-gray-50/90  right-0 z-10 p-5"
+            className="absolute top-0 left-0 h-full w-full dark:bg-black bg-gray-50/100 right-0 z-10 p-5"
           >
             <div className="__exit_arrow">
               <FaArrowLeft
@@ -421,26 +431,28 @@ const Page = () => {
                 onClick={handleCloseSetting}
               />
             </div>
-            <div className="sticky h-3/4 border border-green-600">
+            <div className="sticky h-3/4 ">
               {" "}
-              <div className="__image_description h-full w-full flex justify-between items-center ">
-                <div className="__left w-3/5 h-full border border-black">
+              <div className="__image_description h-full w-full xl:flex justify-between items-center ">
+                <div className="__left xl:w-3/5 h-full m-2">
                   <Image
                     src={postDetailsData?.url ? postDetailsData.url : ""}
                     alt={postDetailsData?.prompt ? postDetailsData.prompt : ""}
                     width={500}
                     height={500}
-                    className="h-full w-full object-contain rounded-lg border border-black"
+                    className="xl:h-full w-full object-contain rounded-lg "
                   />
                 </div>
-                <div className="__right w-2/5 h-full border border-red-600">
-                  <div className="flex w-3/4 justify-between items-center ">
-                    <label className="w-1/2">Prompt:</label>
-                    <h2 className="w-1/2">{postDetailsData?.prompt}</h2>
+                <div className="__right xl:w-2/5 h-full ">
+                  <div className="w-full my-5">
+                    <h2 className="dark:text-gray-300">Prompt:</h2>
+                    <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
+                      {postDetailsData?.prompt}
+                    </p>
                   </div>
-                  <div className="flex w-3/4 justify-between items-center">
-                    <label className="w-1/2">Created At:</label>
-                    <p className="w-1/2">
+                  <div className="w-full my-5">
+                    <h2 className="dark:text-gray-300">Date Created:</h2>
+                    <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
                       {" "}
                       {new Date(
                         postDetailsData?.createdAt
@@ -449,9 +461,45 @@ const Page = () => {
                       ).toLocaleDateString("en-CA")}
                     </p>
                   </div>
-                  <div className="flex w-3/4 justify-between items-center">
-                    <label className="w-1/2">Selected Model:</label>
-                    <p className="w-1/2">{selectedModel}</p>
+                  <div className="w-full my-5">
+                    <h2 className="dark:text-gray-300">Selected Model:</h2>
+                    <div className="h-auto w-full dark:bg-gray-900 py-4 px-2 rounded-lg bg-gray-200 ">
+                      {" "}
+                      <div className="h-36 w-32">
+                        <Image
+                          src={
+                            generatedImageModel?.image
+                              ? generatedImageModel?.image
+                              : ""
+                          }
+                          alt={
+                            generatedImageModel?.title
+                              ? generatedImageModel?.title
+                              : ""
+                          }
+                          height={350}
+                          width={350}
+                          className="object-cover w-full h-full rounded-lg"
+                        />
+                      </div>
+                      <div className="dark:bg-gray-900 rounded-md">
+                        {" "}
+                        <span className="text-2xl font-semibold">
+                          {generatedImageModel?.title.replace(/-/g, " ")}
+                        </span>
+                        <p className="text-sm dark:text-gray-400 text-gray-600">
+                          {generatedImageModel?.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3>Actions:</h3>
+                    <Button>
+                      <FaDownload />
+                      Download
+                    </Button>
                   </div>
                 </div>
               </div>
