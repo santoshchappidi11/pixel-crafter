@@ -56,16 +56,13 @@ const Page = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isShwoModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<Model>();
-  const [selectedModelColor, setSelectedModelColor] = useState<string | null>(
-    null
-  );
+  const [selectedModelColor, setSelectedModelColor] = useState<string>("flux");
   const [generatedImageModel, setGeneratedImageModel] = useState<Model>();
   const [isShowDescriptionOverlay, setIsShowDescriptionOverlay] =
     useState<boolean>(false);
   const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
-  console.log(generatedImageModel, "image model");
 
   const fetchPosts = async () => {
     try {
@@ -363,7 +360,7 @@ const Page = () => {
               />
             </div>
             <div className="__Models w-full h-auto rounded-lg grid xl:grid-cols-5 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] place-items-start gap-3 p-5">
-              {filteredModelsData?.length ? (
+              {filteredModelsData?.length > 0 && (
                 <AnimatePresence mode="wait">
                   {filteredModelsData.map((model, index) => {
                     return (
@@ -407,10 +404,13 @@ const Page = () => {
                     );
                   })}
                 </AnimatePresence>
-              ) : (
-                <></>
               )}
             </div>
+            {!filteredModelsData?.length && (
+              <div className="h-96 w-full flex justify-center items-center">
+                Model not found!
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -431,9 +431,9 @@ const Page = () => {
                 onClick={handleCloseSetting}
               />
             </div>
-            <div className="sticky h-3/4 ">
+            <div className="xl:h-3/4">
               {" "}
-              <div className="__image_description h-full w-full xl:flex justify-between items-center ">
+              <div className="__image_description xl:h-full h-auto w-full xl:flex justify-between items-center ">
                 <div className="__left xl:w-3/5 h-full m-2">
                   <Image
                     src={postDetailsData?.url ? postDetailsData.url : ""}
