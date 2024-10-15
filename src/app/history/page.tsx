@@ -3,24 +3,69 @@
 import { toast } from "@/hooks/use-toast";
 import { Post } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiLoaderCircle } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 import CardCloseBtn from "./CardCloseBtn";
+import ImageDetails from "../components/ImageDetails";
+import { modelsData } from "@/data/data";
 // import { RxCross2 } from "react-icons/rx";
+
+interface Model {
+  id: number;
+  title: string;
+  image: StaticImageData;
+  description: string;
+}
+
+interface postDetailsModel {
+  prompt: string;
+  id: string;
+  seed: number;
+  url: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  modelName: string;
+}
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [posts, setPosts] = useState<Post[]>([]);
   const [cardHoveredId, setIsCardHoveredId] = useState<string | null>(null);
+  const [isShowDescriptionOverlay, setIsShowDescriptionOverlay] =
+    useState<boolean>(true);
+  const [generatedImageModel, setGeneratedImageModel] = useState<Model>();
+  const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
+
+  console.log(generatedImageModel, "model name");
+  console.log(postDetailsData, "post details");
+  const handleCloseSetting = () => {
+    setIsShowDescriptionOverlay(false);
+  };
+
+  const handleImageDetails = (post: postDetailsModel) => {
+    console.log(post, "post from above");
+    setIsShowDescriptionOverlay(true);
+    const modelDetails = modelsData.find(
+      (model) => model?.title.toLowerCase() === post.modelName.toLowerCase()
+    );
+
+    if (modelDetails) {
+      setGeneratedImageModel(modelDetails);
+    }
+
+    if (post) {
+      setPostDetailsData(post);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
       const response = await fetch("/api/image");
       const data = await response.json();
-      console.log(data);
       setPosts(data);
     } catch (error) {
       console.log(error);
@@ -117,8 +162,10 @@ const Page = () => {
                         onMouseEnter={() => setIsCardHoveredId(post.id)}
                         onMouseLeave={() => setIsCardHoveredId(null)}
                       >
-                        <div className="relative w-full">
-                          {" "}
+                        <div
+                          className="relative w-full cursor-pointer"
+                          onClick={() => handleImageDetails(post)} // Move the onClick event here
+                        >
                           <Image
                             src={post.url}
                             alt={post.prompt}
@@ -126,14 +173,16 @@ const Page = () => {
                             width={250}
                             className="object-cover w-full rounded-md"
                           />
+
                           {/* Image Overlay */}
                           <div
                             className={`absolute inset-0 bg-black/30 transition-opacity duration-200 ${
                               cardHoveredId === post.id
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0 pointer-events-none"
                             } rounded-md`}
                           ></div>
+
                           {cardHoveredId == post.id && (
                             <CardCloseBtn
                               handlePostDelete={handlePostDelete}
@@ -141,6 +190,7 @@ const Page = () => {
                             />
                           )}
                         </div>
+
                         <div className="text-sm text-gray-500 flex justify-end items-center w-auto pt-2 ">
                           {" "}
                           <span className="border dark:bg-gray-900 bg-gray-100  px-1 rounded-md">
@@ -165,6 +215,20 @@ const Page = () => {
           </>
         )}
       </div>
+
+      <AnimatePresence>
+        {isShowDescriptionOverlay && (
+          <>
+            {postDetailsData && generatedImageModel && (
+              <ImageDetails
+                handleCloseSetting={handleCloseSetting}
+                postDetailsData={postDetailsData}
+                generatedImageModel={generatedImageModel}
+              />
+            )}
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

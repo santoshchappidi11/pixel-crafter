@@ -22,8 +22,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMyContext } from "../context/PixelCrafterContext";
-import { FaArrowLeft } from "react-icons/fa6";
-import { FaDownload } from "react-icons/fa";
+import ImageDetails from "../components/ImageDetails";
+import Models from "../components/Models";
 
 interface Model {
   id: number;
@@ -54,13 +54,13 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isShwoModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
+  const [isShowModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<Model>();
   const [selectedModelColor, setSelectedModelColor] = useState<string>("flux");
   const [generatedImageModel, setGeneratedImageModel] = useState<Model>();
+  const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
   const [isShowDescriptionOverlay, setIsShowDescriptionOverlay] =
     useState<boolean>(false);
-  const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
 
@@ -71,8 +71,6 @@ const Page = () => {
       setPosts(data);
     } catch (error) {
       console.log(error);
-    } finally {
-      // setIsLoading(false);
     }
   };
 
@@ -81,7 +79,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (isShwoModelOverlay) {
+    if (isShowModelOverlay) {
       // Adding class to hide horizontal overflow when the overlay opens
       document.body.classList.add("overflow-x-hidden");
     } else {
@@ -92,7 +90,7 @@ const Page = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [isShwoModelOverlay]);
+  }, [isShowModelOverlay]);
 
   useEffect(() => {
     if (userSearchedModel !== "") {
@@ -138,7 +136,7 @@ const Page = () => {
     const modelDetails = modelsData.find(
       (model) => model?.title.toLowerCase() === outputImg?.modelName
     );
-    console.log(outputImg, "output image here");
+
     setGeneratedImageModel(modelDetails);
   };
 
@@ -340,175 +338,31 @@ const Page = () => {
       </div>
 
       <AnimatePresence>
-        {isShwoModelOverlay && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.3 }}
-            className={`${
-              isShwoModelOverlay ? "overflow-hidden" : "overflow-auto"
-            } fixed h-full w-full dark:bg-black bg-gray-50 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
-          >
-            <div className="__exit_arrow  mt-[20px] px-5">
-              <FaArrowLeft
-                className="cursor-pointer dark:text-white my-5"
-                size={20}
-                onClick={handleCloseSetting}
-              />
-
-              <Input
-                placeholder="Search Model Name..."
-                className="sm:w-4/5 lg:w-1/2 h-9 m-auto transition-all placeholder:text-gray-400 dark:border-gray-400 border border-gray-500  text-gray-900 outline-none bg-white"
-                onChange={handleSearchModelPrompt}
-              />
-            </div>
-            <div className="__Models w-full h-auto rounded-lg grid xl:grid-cols-5 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] place-items-start gap-3 p-5">
-              {filteredModelsData?.length > 0 && (
-                <AnimatePresence mode="wait">
-                  {filteredModelsData.map((model, index) => {
-                    return (
-                      <motion.div
-                        initial={{
-                          opacity: 0,
-                          scale: 0.9,
-                          filter: "blur(10px)",
-                        }}
-                        animate={{
-                          opacity: 1,
-                          scale: 1,
-                          filter: "blur(0px)",
-                        }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                        onClick={() => handleSelectedModel(model)}
-                        key={model.id}
-                        className={`h-auto w-full cursor-pointer p-2 rounded-lg  border ${
-                          selectedModelColor == model.title.toLowerCase() &&
-                          "border-4 dark:border-blue-500 border-blue-700"
-                        }`}
-                      >
-                        <div>
-                          <Image
-                            src={model.image}
-                            alt={model.title}
-                            height={350}
-                            width={350}
-                            className="h-full w-full object-cover rounded-lg border"
-                          />
-                        </div>
-                        <div>
-                          <h2 className="text-lg font-semibold dark:text-gray-300">
-                            {model.title.replace(/-/g, " ")}
-                          </h2>
-                          <p className="text-xs font-normal dark:text-gray-400 text-gray-600">
-                            {model.description}
-                          </p>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              )}
-            </div>
-            {!filteredModelsData?.length && (
-              <div className="h-96 w-full flex justify-center items-center">
-                Model not found!
-              </div>
-            )}
-          </motion.div>
+        {isShowModelOverlay && (
+          <>
+            <Models
+              isShowModelOverlay={isShowModelOverlay}
+              handleCloseSetting={handleCloseSetting}
+              handleSearchModelPrompt={handleSearchModelPrompt}
+              filteredModelsData={filteredModelsData}
+              handleSelectedModel={handleSelectedModel}
+              selectedModelColor={selectedModelColor}
+            />
+          </>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {isShowDescriptionOverlay && (
-          <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-0 left-0 h-full w-full dark:bg-black bg-gray-50/100 right-0 z-10 p-5"
-          >
-            <div className="__exit_arrow">
-              <FaArrowLeft
-                className="cursor-pointer dark:text-white my-5"
-                size={20}
-                onClick={handleCloseSetting}
+          <>
+            {postDetailsData && generatedImageModel && (
+              <ImageDetails
+                handleCloseSetting={handleCloseSetting}
+                postDetailsData={postDetailsData}
+                generatedImageModel={generatedImageModel}
               />
-            </div>
-            <div className="xl:h-3/4">
-              {" "}
-              <div className="__image_description xl:h-full h-auto w-full xl:flex justify-between items-center ">
-                <div className="__left xl:w-3/5 h-full m-2">
-                  <Image
-                    src={postDetailsData?.url ? postDetailsData.url : ""}
-                    alt={postDetailsData?.prompt ? postDetailsData.prompt : ""}
-                    width={500}
-                    height={500}
-                    className="xl:h-full w-full object-contain rounded-lg "
-                  />
-                </div>
-                <div className="__right xl:w-2/5 h-full ">
-                  <div className="w-full my-5">
-                    <h2 className="dark:text-gray-300">Prompt:</h2>
-                    <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
-                      {postDetailsData?.prompt}
-                    </p>
-                  </div>
-                  <div className="w-full my-5">
-                    <h2 className="dark:text-gray-300">Date Created:</h2>
-                    <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
-                      {" "}
-                      {new Date(
-                        postDetailsData?.createdAt
-                          ? postDetailsData.createdAt
-                          : ""
-                      ).toLocaleDateString("en-CA")}
-                    </p>
-                  </div>
-                  <div className="w-full my-5">
-                    <h2 className="dark:text-gray-300">Selected Model:</h2>
-                    <div className="h-auto w-full dark:bg-gray-900 py-4 px-2 rounded-lg bg-gray-200 ">
-                      {" "}
-                      <div className="h-36 w-32">
-                        <Image
-                          src={
-                            generatedImageModel?.image
-                              ? generatedImageModel?.image
-                              : ""
-                          }
-                          alt={
-                            generatedImageModel?.title
-                              ? generatedImageModel?.title
-                              : ""
-                          }
-                          height={350}
-                          width={350}
-                          className="object-cover w-full h-full rounded-lg"
-                        />
-                      </div>
-                      <div className="dark:bg-gray-900 rounded-md">
-                        {" "}
-                        <span className="text-2xl font-semibold">
-                          {generatedImageModel?.title.replace(/-/g, " ")}
-                        </span>
-                        <p className="text-sm dark:text-gray-400 text-gray-600">
-                          {generatedImageModel?.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3>Actions:</h3>
-                    <Button>
-                      <FaDownload />
-                      Download
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+            )}
+          </>
         )}
       </AnimatePresence>
     </div>
