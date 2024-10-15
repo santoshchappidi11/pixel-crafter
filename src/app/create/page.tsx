@@ -110,6 +110,10 @@ const Page = () => {
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    setSelectedModelColor("flux");
+  }, []);
+
   const handleOpenSetting = () => {
     setIsShowModelOverlay(true);
   };
@@ -122,7 +126,7 @@ const Page = () => {
 
   const handleSelectedModel = (modelName: Model) => {
     setSelectedModel(modelName);
-    setSelectedModelColor(modelName.title);
+    setSelectedModelColor(modelName.title.toLowerCase());
   };
 
   const handleImageDetails = (postId: string) => {
@@ -344,7 +348,7 @@ const Page = () => {
             transition={{ duration: 0.3 }}
             className={`${
               isShwoModelOverlay ? "overflow-hidden" : "overflow-auto"
-            } fixed h-full w-full dark:bg-black bg-gray-50/90 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
+            } fixed h-full w-full dark:bg-black bg-gray-50 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
           >
             <div className="__exit_arrow  mt-[20px] px-5">
               <FaArrowLeft
@@ -379,7 +383,7 @@ const Page = () => {
                         onClick={() => handleSelectedModel(model)}
                         key={model.id}
                         className={`h-auto w-full cursor-pointer p-2 rounded-lg  border ${
-                          selectedModelColor == model.title &&
+                          selectedModelColor == model.title.toLowerCase() &&
                           "border-4 dark:border-blue-500 border-blue-700"
                         }`}
                       >

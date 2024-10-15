@@ -1,10 +1,11 @@
-import testImage from "./../assets/test-image.webp";
 import fluxImage from "./../assets/flux.webp";
 import fluxRealismImage from "./../assets/flux-realism.webp";
 import fluxAnime from "./../assets/flux-anime.webp";
 import flux3DImage from "./../assets/flux-3d.webp";
 import anyDarkImage from "./../assets/any-dark.webp";
 import turboImage from "./../assets/turbo.webp";
+import fluxProImage from "./../assets/flux-pro.webp";
+import fluxCablyaiImage from "./../assets/Flux-Cablyai.webp";
 
 export const modelsData = [
   {
@@ -24,7 +25,7 @@ export const modelsData = [
   {
     id: 3,
     title: "Flux-Cablyai",
-    image: testImage,
+    image: fluxCablyaiImage,
     description:
       "Specializes in generating artistic and surreal visuals, blending realism with abstract elements. Great for creative and unconventional outputs.",
   },
@@ -52,7 +53,7 @@ export const modelsData = [
   {
     id: 7,
     title: "Flux-Pro",
-    image: testImage,
+    image: fluxProImage,
     description:
       "A premium model offering enhanced detail and complexity, capable of producing high-resolution, professional-grade visuals.",
   },
