@@ -34,14 +34,6 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
   postDetailsData,
   generatedImageModel,
 }) => {
-  // // Use useEffect to prevent background scroll when modal is open
-  // React.useEffect(() => {
-  //   document.body.style.overflow = "hidden"; // Disable background scrolling
-  //   return () => {
-  //     document.body.style.overflow = ""; // Enable background scrolling when component unmounts
-  //   };
-  // }, []);
-
   return (
     <motion.div
       initial={{ y: "100%" }}

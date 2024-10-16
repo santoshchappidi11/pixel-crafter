@@ -18,7 +18,7 @@ const Page = () => {
 
   return (
     <div className="mt-[72px] h-dvh w-full  flex justify-center items-start">
-      <div className=" w-auto flex justify-center items-center flex-col mt-16 p-5 border dark:border-gray-900 border-gray-200 dark:bg-gray-900/20 bg-gray-100/50 rounded-md">
+      <div className=" w-auto flex justify-center items-center flex-col mt-16 p-5 border dark:border-violet-400/20 border-gray-200 dark:bg-violet-900/10 bg-gray-100/50 rounded-lg">
         {" "}
         <div className="__Main_Profile_Image">
           {" "}

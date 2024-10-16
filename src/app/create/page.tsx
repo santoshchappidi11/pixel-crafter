@@ -140,6 +140,19 @@ const Page = () => {
     setGeneratedImageModel(modelDetails);
   };
 
+  const handleHistoryImageDetails = (historyPost: postDetailsModel) => {
+    setIsShowDescriptionOverlay(true);
+
+    const postDetails = posts?.find((post) => post.id === historyPost.id);
+    setPostDetailsData(postDetails);
+
+    const modelDetails = modelsData.find(
+      (model) => model?.title.toLowerCase() === historyPost.modelName
+    );
+
+    setGeneratedImageModel(modelDetails);
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -179,7 +192,7 @@ const Page = () => {
   const skeletonHighlightColor = isDarkMode == "dark" ? "#444444" : "#f5f5f5"; // Dark mode highlight color
 
   return (
-    <div className="h-full w-full lg:mt-[80px] mt-[90px] flex justify-center items-start flex-col p-6 relative ">
+    <div className="h-full w-full pt-10 mt-[60px] flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/20 to-transparent">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center dark:text-white/60 text-gray-500 my-1">
@@ -216,7 +229,11 @@ const Page = () => {
                           <IoMdSettings
                             onClick={handleOpenSetting}
                             size={30}
-                            className="hover:animate-spin-once cursor-pointer dark:text-gray-300 dark:hover:text-gray-200 transition-all"
+                            className={` ${
+                              isLoading
+                                ? "pointer-events-none text-gray-300 dark:text-gray-700"
+                                : "pointer-events-auto"
+                            } hover:animate-spin-once cursor-pointer dark:text-gray-300 dark:hover:text-gray-200 transition-all`}
                           />
                         </div>
                       </FormItem>
@@ -228,14 +245,14 @@ const Page = () => {
                   <Button
                     loading={isLoading}
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-purple-500 text-white"
+                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700"
                   >
                     Generating...
                   </Button>
                 ) : (
                   <Button
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium bg-purple-500/80 hover:bg-purple-500 text-white"
+                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700"
                   >
                     Generate
                   </Button>
@@ -244,7 +261,7 @@ const Page = () => {
             </Form>
           </div>
         </div>
-        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-white/5 bg-gray-100 rounded-lg relative xl:h-[650px] h-auto p-5">
+        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative xl:h-[650px] h-auto p-5">
           {!outputImg ? (
             <>
               {!isLoading ? (
@@ -271,7 +288,7 @@ const Page = () => {
           ) : (
             <>
               {" "}
-              <div className="__Main_output relative xl:w-[38%] xl:h-full h-[500px] rounded-xl overflow-hidden">
+              <div className="__Main_output relative xl:w-[38%] xl:h-full h-[500px] rounded-xl overflow-hidden ">
                 <Image
                   src={outputImg?.url ? outputImg?.url : ""}
                   alt="result"
@@ -310,7 +327,8 @@ const Page = () => {
                                 alt={post.prompt}
                                 height={450}
                                 width={450}
-                                className="object-cover h-full w-full rounded-md"
+                                className="object-cover h-full w-full rounded-md cursor-pointer"
+                                onClick={() => handleHistoryImageDetails(post)}
                               />
                             </div>
                             <div className="text-gray-500 flex justify-end items-center w-auto">

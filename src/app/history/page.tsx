@@ -39,14 +39,11 @@ const Page = () => {
   const [generatedImageModel, setGeneratedImageModel] = useState<Model>();
   const [postDetailsData, setPostDetailsData] = useState<postDetailsModel>();
 
-  console.log(generatedImageModel, "model name");
-  console.log(postDetailsData, "post details");
   const handleCloseSetting = () => {
     setIsShowDescriptionOverlay(false);
   };
 
   const handleImageDetails = (post: postDetailsModel) => {
-    console.log(post, "post from above");
     setIsShowDescriptionOverlay(true);
     const modelDetails = modelsData.find(
       (model) => model?.title.toLowerCase() === post.modelName.toLowerCase()

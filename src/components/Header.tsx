@@ -54,7 +54,7 @@ const Header = () => {
   }, [setIsDarkMode]);
 
   return (
-    <div className="fixed top-0 w-full h-[60px] bg-gray-100 dark:bg-black/90 border-b border-white/25 p-3 flex justify-between items-center z-50">
+    <div className="fixed top-0 w-full h-[60px] bg-gray-100 dark:bg-gray-900/50 p-3 flex justify-between items-center z-50">
       <Link href="/">
         <h2 className="font-semibold text-xl px-2 text-pretty">
           Pixel Crafter

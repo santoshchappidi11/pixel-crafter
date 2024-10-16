@@ -36,7 +36,7 @@ const Models: React.FC<handleModelsProps> = ({
       transition={{ duration: 0.3 }}
       className={`${
         isShowModelOverlay ? "overflow-hidden" : "overflow-auto"
-      } fixed h-full w-full dark:bg-black bg-gray-50 xl:top-[-20px] top-[-30px] right-0 z-10 overflow-y-auto custom-scrollbar`}
+      } fixed h-full w-full dark:bg-black bg-gray-50 top-0 right-0 z-10 overflow-y-auto custom-scrollbar`}
     >
       <div className="__exit_arrow  mt-[20px] px-5">
         <FaArrowLeft
@@ -72,7 +72,7 @@ const Models: React.FC<handleModelsProps> = ({
                   key={model.id}
                   className={`h-auto w-full cursor-pointer p-2 rounded-lg  border ${
                     selectedModelColor == model.title.toLowerCase() &&
-                    "border-4 dark:border-blue-500 border-blue-700"
+                    "border-4 dark:border-violet-700/60 border-violet-700"
                   }`}
                 >
                   <div>

@@ -33,7 +33,7 @@ export default function Home() {
           {" "}
           <Link href="/create">
             {" "}
-            <Button className="mt-5 py-6 px-5 text-base font-bold">
+            <Button className="mt-5 py-6 px-5 text-base font-bold bg-violet-800 text-white hover:bg-violet-700">
               Start Crafting <FaArrowRight className="ml-2" />
             </Button>
           </Link>
