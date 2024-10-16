@@ -34,13 +34,21 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
   postDetailsData,
   generatedImageModel,
 }) => {
+  // // Use useEffect to prevent background scroll when modal is open
+  // React.useEffect(() => {
+  //   document.body.style.overflow = "hidden"; // Disable background scrolling
+  //   return () => {
+  //     document.body.style.overflow = ""; // Enable background scrolling when component unmounts
+  //   };
+  // }, []);
+
   return (
     <motion.div
       initial={{ y: "100%" }}
       animate={{ y: 0 }}
       exit={{ y: "100%" }}
       transition={{ duration: 0.3 }}
-      className="absolute top-0 left-0 h-full w-full dark:bg-black bg-gray-50/100 right-0 z-10 p-5"
+      className="sticky top-0 left-0 right-0 bottom-0 rounded-lg  h-screen w-full dark:bg-black bg-gray-50/100 z-10 p-5 overflow-y-auto custom-scrollbar"
     >
       <div className="__exit_arrow">
         <FaArrowLeft
@@ -49,29 +57,27 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
           onClick={handleCloseSetting}
         />
       </div>
-      <div className="xl:h-3/4">
-        {" "}
-        <div className="__image_description xl:h-full h-auto w-full xl:flex justify-between items-center ">
+      <div className="xl:h-3/4 h-auto">
+        <div className="__image_description xl:h-full h-auto w-full xl:flex justify-between items-center">
           <div className="__left xl:w-3/5 h-full m-2">
             <Image
               src={postDetailsData?.url ? postDetailsData.url : ""}
               alt={postDetailsData?.prompt ? postDetailsData.prompt : ""}
               width={500}
               height={500}
-              className="xl:h-full w-full object-contain rounded-lg "
+              className="xl:h-full w-full object-contain rounded-lg"
             />
           </div>
-          <div className="__right xl:w-2/5 h-full ">
+          <div className="__right xl:w-2/5 h-full px-2 overflow-y-auto custom-scrollbar">
             <div className="w-full my-5">
               <h2 className="dark:text-gray-300">Prompt:</h2>
-              <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
+              <p className="py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200">
                 {postDetailsData?.prompt}
               </p>
             </div>
             <div className="w-full my-5">
               <h2 className="dark:text-gray-300">Date Created:</h2>
-              <p className=" py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 ">
-                {" "}
+              <p className="py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200">
                 {new Date(
                   postDetailsData?.createdAt ? postDetailsData.createdAt : ""
                 ).toLocaleDateString("en-CA")}
@@ -79,8 +85,7 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
             </div>
             <div className="w-full my-5">
               <h2 className="dark:text-gray-300">Selected Model:</h2>
-              <div className="h-auto w-full dark:bg-gray-900 py-4 px-2 rounded-lg bg-gray-200 ">
-                {" "}
+              <div className="h-auto w-full dark:bg-gray-900 py-4 px-2 rounded-lg bg-gray-200">
                 <div className="h-36 w-32">
                   <Image
                     src={
@@ -99,7 +104,6 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
                   />
                 </div>
                 <div className="dark:bg-gray-900 rounded-md">
-                  {" "}
                   <span className="text-2xl font-semibold">
                     {generatedImageModel?.title.replace(/-/g, " ")}
                   </span>
