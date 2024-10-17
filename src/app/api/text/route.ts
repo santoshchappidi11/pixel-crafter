@@ -27,17 +27,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No user found!" }, { status: 401 });
   }
 
-  function generateRandomNumber(): number {
-    return Math.floor(Math.random() * 100000000) + 1;
-  }
-  const randomSeed = generateRandomNumber();
+  // function generateRandomNumber(): number {
+  //   return Math.floor(Math.random() * 100000000) + 1;
+  // }
+  // const randomSeed = generateRandomNumber();
 
   const { prompt } = await request.json();
 
   // Updated prompt for brevity and clarity
   const userPrompt = `Enhance the following prompt into a concise description for generating an image: "${prompt}". Please limit the response to just a few lines.`;
   const model = "openai"; // or "mistral"
-  const seed = randomSeed; // -1 for random
+  const seed = -1; // -1 for random
   const json = true; // set to true for JSON response
   const system = "Provide a short, creative description."; // Example system prompt
 

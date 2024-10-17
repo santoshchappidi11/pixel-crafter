@@ -64,9 +64,6 @@ const Page = () => {
     useState<boolean>(false);
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
-  const [enhancedPrompt, setEnhancedPrompt] = useState<string>("");
-
-  console.log(enhancedPrompt, "modified prompt here");
 
   const fetchPosts = async () => {
     try {
@@ -192,26 +189,32 @@ const Page = () => {
   }
 
   const handlePromptEnhancement = async (prompt: string) => {
-    try {
-      const response = await fetch("/api/text", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt,
-        }),
-      });
+    if (prompt.length) {
+      try {
+        const response = await fetch("/api/text", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt,
+          }),
+        });
 
-      const data = await response.json();
-      if (response.status === 200) {
-        setEnhancedPrompt(data.text);
-        form.setValue("prompt", data.text, { shouldValidate: true });
-      } else {
-        toast({ variant: "destructive", description: data.error });
+        const data = await response.json();
+        if (response.status === 200) {
+          form.setValue("prompt", data.text, { shouldValidate: true });
+        } else {
+          toast({ variant: "destructive", description: data.error });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      toast({
+        variant: "destructive",
+        description: "Please enter something to do the magic! ✨",
+      });
     }
   };
 
@@ -243,11 +246,16 @@ const Page = () => {
                   name="prompt"
                   render={({ field }) => (
                     <div className="lg:max-w-[50%] w-[100%] flex flex-col justify-center items-center ">
-                      <FormItem className="w-full h-12 lg:max-w-[100%] rounded-md  dark:border-none  flex justify-center items-center">
+                      <FormItem
+                        style={{
+                          boxShadow: "0 1px 12px 2px rgba(139, 92, 246, 0.5)",
+                        }}
+                        className=" border-2 dark:border-violet-500 border-gray-900 bg-white w-full h-12 lg:max-w-[100%] rounded-md  dark:border-none  flex justify-center items-center"
+                      >
                         <FormControl>
                           <Input
                             placeholder="Ever imagined a city underwater? Create it here!"
-                            className="w-full h-full transition-all dark:border-gray-400 border border-gray-500  text-gray-900 outline-none bg-white"
+                            className="w-full h-full transition-all text-gray-900 outline-none bg-white"
                             {...field}
                           />
                         </FormControl>
@@ -256,10 +264,10 @@ const Page = () => {
                             size={25}
                             className={`  ${
                               isLoading
-                                ? "pointer-events-none text-gray-300 dark:text-gray-700"
-                                : "pointer-events-auto"
-                            } cursor-pointer hover:text-yellow-400 transition-all`}
-                            onClick={() => handlePromptEnhancement(field.value)} // Pass the prompt directly
+                                ? "pointer-events-none text-gray-300"
+                                : "pointer-events-auto text-gray-900"
+                            } cursor-pointer hover:text-yellow-500 transition-all`}
+                            onClick={() => handlePromptEnhancement(field.value)}
                           />
 
                           <IoMdSettings
@@ -267,9 +275,9 @@ const Page = () => {
                             size={30}
                             className={` ${
                               isLoading
-                                ? "pointer-events-none text-gray-300 dark:text-gray-700"
-                                : "pointer-events-auto"
-                            } hover:animate-spin-once cursor-pointer dark:text-gray-300 dark:hover:text-gray-200 transition-all`}
+                                ? "pointer-events-none text-gray-300"
+                                : "pointer-events-auto text-gray-900"
+                            } hover:animate-spin-once cursor-pointer transition-all`}
                           />
                         </div>
                       </FormItem>
