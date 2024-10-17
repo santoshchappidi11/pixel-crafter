@@ -192,7 +192,7 @@ const Page = () => {
   const skeletonHighlightColor = isDarkMode == "dark" ? "#444444" : "#f5f5f5"; // Dark mode highlight color
 
   return (
-    <div className="h-full w-full pt-10 mt-[60px] flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/20 to-transparent">
+    <div className="h-full w-full pt-10 mt-[60px] flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/40 to-transparent">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center dark:text-white/60 text-gray-500 my-1">
