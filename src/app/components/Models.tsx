@@ -36,7 +36,7 @@ const Models: React.FC<handleModelsProps> = ({
       transition={{ duration: 0.3 }}
       className={`${
         isShowModelOverlay ? "overflow-hidden" : "overflow-auto"
-      } fixed h-full w-full dark:bg-black bg-gray-50 top-0 right-0 z-10 overflow-y-auto custom-scrollbar`}
+      } fixed h-full w-full dark:bg-black bg-gray-50 pt-16 top-0 right-0 z-10 overflow-y-auto custom-scrollbar`}
     >
       <div className="__exit_arrow  mt-[20px] px-5">
         <FaArrowLeft

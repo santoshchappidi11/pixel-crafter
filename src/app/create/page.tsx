@@ -24,6 +24,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useMyContext } from "../context/PixelCrafterContext";
 import ImageDetails from "../components/ImageDetails";
 import Models from "../components/Models";
+import { BsStars } from "react-icons/bs";
 
 interface Model {
   id: number;
@@ -63,6 +64,9 @@ const Page = () => {
     useState<boolean>(false);
   const [userSearchedModel, setUserSearchedModel] = useState<string>("");
   const [filteredModelsData, setFilteredModelsData] = useState<Model[]>([]);
+  const [enhancedPrompt, setEnhancedPrompt] = useState<string>("");
+
+  console.log(enhancedPrompt, "modified prompt here");
 
   const fetchPosts = async () => {
     try {
@@ -173,12 +177,11 @@ const Page = () => {
       });
 
       const data = await response.json();
-      console.log(data, "data here");
+
       if (response.status === 200) {
         setOutputImg(data.post);
         await fetchPosts();
       } else {
-        console.log(data.error);
         toast({ variant: "destructive", description: data.error });
       }
     } catch (error) {
@@ -188,11 +191,35 @@ const Page = () => {
     }
   }
 
+  const handlePromptEnhancement = async (prompt: string) => {
+    try {
+      const response = await fetch("/api/text", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        setEnhancedPrompt(data.text);
+        form.setValue("prompt", data.text, { shouldValidate: true });
+      } else {
+        toast({ variant: "destructive", description: data.error });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const skeletonBaseColor = isDarkMode == "dark" ? "#333333" : "#e0e0e0"; // Dark mode base color
   const skeletonHighlightColor = isDarkMode == "dark" ? "#444444" : "#f5f5f5"; // Dark mode highlight color
 
   return (
-    <div className="h-full w-full pt-10 mt-[60px] flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/40 to-transparent">
+    <div className="h-full w-full pt-28  flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/40 to-transparent">
       <div className="w-full py-2">
         <h1 className="font-bold text-4xl text-center">Craft Your Ideas!</h1>
         <p className="text-center dark:text-white/60 text-gray-500 my-1">
@@ -225,7 +252,16 @@ const Page = () => {
                           />
                         </FormControl>
                         <div className="flex justify-center items-center h-full w-auto pb-2 px-2">
-                          {" "}
+                          <BsStars
+                            size={25}
+                            className={`  ${
+                              isLoading
+                                ? "pointer-events-none text-gray-300 dark:text-gray-700"
+                                : "pointer-events-auto"
+                            } cursor-pointer hover:text-yellow-400 transition-all`}
+                            onClick={() => handlePromptEnhancement(field.value)} // Pass the prompt directly
+                          />
+
                           <IoMdSettings
                             onClick={handleOpenSetting}
                             size={30}
@@ -245,16 +281,18 @@ const Page = () => {
                   <Button
                     loading={isLoading}
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700"
+                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700 tracking-widest"
                   >
                     Generating...
                   </Button>
                 ) : (
                   <Button
                     type="submit"
-                    className="sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700"
+                    className="relative sm:w-auto w-full sm:m-0 my-2 px-8 py-6 font-medium  bg-violet-800 text-white hover:bg-violet-700 tracking-widest overflow-hidden group"
                   >
                     Generate
+                    {/* Shine effect */}
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform translate-x-[-150%] transition-all duration-500 ease-in-out group-hover:translate-x-[150%]"></span>
                   </Button>
                 )}
               </form>

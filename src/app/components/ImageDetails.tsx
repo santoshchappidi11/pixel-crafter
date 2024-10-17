@@ -40,7 +40,7 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
       animate={{ y: 0 }}
       exit={{ y: "100%" }}
       transition={{ duration: 0.3 }}
-      className="sticky top-0 left-0 right-0 bottom-0 rounded-lg  h-screen w-full dark:bg-black bg-gray-50/100 z-10 p-5 overflow-y-auto custom-scrollbar"
+      className="sticky top-0 left-0 right-0 bottom-0 rounded-lg  h-screen w-full dark:bg-gray-950 bg-gray-50/100 z-10 p-5 overflow-y-auto custom-scrollbar"
     >
       <div className="__exit_arrow">
         <FaArrowLeft
