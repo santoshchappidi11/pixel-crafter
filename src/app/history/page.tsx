@@ -161,7 +161,7 @@ const Page = () => {
                       >
                         <div
                           className="relative w-full cursor-pointer"
-                          onClick={() => handleImageDetails(post)} // Move the onClick event here
+                          onClick={() => handleImageDetails(post)}
                         >
                           <Image
                             src={post.url}

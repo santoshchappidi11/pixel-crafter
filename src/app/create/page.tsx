@@ -25,6 +25,7 @@ import { useMyContext } from "../context/PixelCrafterContext";
 import ImageDetails from "../components/ImageDetails";
 import Models from "../components/Models";
 import { BsStars } from "react-icons/bs";
+import { BiLoaderCircle } from "react-icons/bi";
 
 interface Model {
   id: number;
@@ -50,9 +51,10 @@ const formSchema = z.object({
 });
 
 const Page = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [promptLoader, setPromptLoader] = useState<boolean>(false);
   const { isDarkMode } = useMyContext();
   const [outputImg, setOutputImg] = useState<postDetailsModel>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isShowModelOverlay, setIsShowModelOverlay] = useState<boolean>(false);
@@ -191,6 +193,7 @@ const Page = () => {
   const handlePromptEnhancement = async (prompt: string) => {
     if (prompt.length) {
       try {
+        setPromptLoader(true);
         const response = await fetch("/api/text", {
           method: "POST",
           headers: {
@@ -209,6 +212,8 @@ const Page = () => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setPromptLoader(false);
       }
     } else {
       toast({
@@ -260,15 +265,23 @@ const Page = () => {
                           />
                         </FormControl>
                         <div className="flex justify-center items-center h-full w-auto pb-2 px-2">
-                          <BsStars
-                            size={25}
-                            className={`  ${
-                              isLoading
-                                ? "pointer-events-none text-gray-300"
-                                : "pointer-events-auto text-gray-900"
-                            } cursor-pointer hover:text-yellow-500 transition-all`}
-                            onClick={() => handlePromptEnhancement(field.value)}
-                          />
+                          {promptLoader ? (
+                            <>
+                              <BiLoaderCircle className="animate-spin text-yellow-500 mr-1" />
+                            </>
+                          ) : (
+                            <BsStars
+                              size={25}
+                              className={`  ${
+                                isLoading
+                                  ? "pointer-events-none text-gray-300"
+                                  : "pointer-events-auto text-gray-900"
+                              } cursor-pointer hover:text-yellow-500 transition-all`}
+                              onClick={() =>
+                                handlePromptEnhancement(field.value)
+                              }
+                            />
+                          )}
 
                           <IoMdSettings
                             onClick={handleOpenSetting}

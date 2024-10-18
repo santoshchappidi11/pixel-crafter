@@ -4,6 +4,7 @@ import React from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { FaEye } from "react-icons/fa";
 
 interface Model {
   id: number;
@@ -34,6 +35,17 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
   postDetailsData,
   generatedImageModel,
 }) => {
+  const handleDownload = async () => {
+    const response = await fetch(postDetailsData.url);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `image-${postDetailsData.id}.jpg`;
+    link.click();
+    URL.revokeObjectURL(url); // Cleaning up the object URL
+  };
+
   return (
     <motion.div
       initial={{ y: "100%" }}
@@ -108,10 +120,19 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
 
             <div>
               <h3>Actions:</h3>
-              <Button>
-                <FaDownload />
-                Download
-              </Button>
+              <div className="w-full h-auto flex items-center">
+                {" "}
+                <a href={postDetailsData.url}>
+                  {" "}
+                  <Button className="mx-1">
+                    <FaEye size={17} /> View
+                  </Button>
+                </a>
+                <Button onClick={handleDownload} className="mx-1">
+                  <FaDownload />
+                  Download
+                </Button>
+              </div>
             </div>
           </div>
         </div>
