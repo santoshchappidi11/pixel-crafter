@@ -26,6 +26,7 @@ import ImageDetails from "../components/ImageDetails";
 import Models from "../components/Models";
 import { BsStars } from "react-icons/bs";
 import { BiLoaderCircle } from "react-icons/bi";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 interface Model {
   id: number;
@@ -270,17 +271,26 @@ const Page = () => {
                               <BiLoaderCircle className="animate-spin text-yellow-500 mr-1" />
                             </>
                           ) : (
-                            <BsStars
-                              size={25}
-                              className={`  ${
-                                isLoading
-                                  ? "pointer-events-none text-gray-300"
-                                  : "pointer-events-auto text-gray-900"
-                              } cursor-pointer hover:text-yellow-500 transition-all`}
-                              onClick={() =>
-                                handlePromptEnhancement(field.value)
-                              }
-                            />
+                            <div className="relative ">
+                              <BsStars
+                                size={25}
+                                className={`${
+                                  isLoading
+                                    ? "pointer-events-none text-gray-300"
+                                    : "pointer-events-auto text-gray-900"
+                                } cursor-pointer hover:text-yellow-500 transition-all`}
+                                data-tooltip-id="my-tooltip"
+                                data-tooltip-content="Enhance prompt with AI"
+                                onClick={() =>
+                                  handlePromptEnhancement(field.value)
+                                }
+                              />
+                              <ReactTooltip
+                                style={{ fontSize: "12px", color: "white" }}
+                                id="my-tooltip"
+                                place="top"
+                              />
+                            </div>
                           )}
 
                           <IoMdSettings

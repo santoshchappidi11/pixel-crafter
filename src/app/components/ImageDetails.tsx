@@ -75,7 +75,7 @@ const ImageDetails: React.FC<handleImageDetailsProps> = ({
           <div className="__right xl:w-2/5 h-full px-2 overflow-y-auto custom-scrollbar">
             <div className="w-full my-5">
               <h2 className="dark:text-gray-300">Prompt:</h2>
-              <p className="py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200">
+              <p className="py-2 px-2 rounded-md dark:bg-gray-900 bg-gray-200 text-base text-gray-100">
                 {postDetailsData?.prompt}
               </p>
             </div>

@@ -7,12 +7,13 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BiLoaderCircle } from "react-icons/bi";
 import { IoSunnyOutline } from "react-icons/io5";
-import { IoMoonOutline } from "react-icons/io5";
+import { BsFillMoonStarsFill } from "react-icons/bs";
 import { useMyContext } from "@/app/context/PixelCrafterContext";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { IoMdSettings } from "react-icons/io";
 import { MdHistory } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const Header = () => {
   const { setIsDarkMode } = useMyContext();
@@ -66,7 +67,11 @@ const Header = () => {
           onClick={toggleTheme}
           className="py-2 px-3 bg-gray-200 dark:bg-gray-800 rounded-md"
         >
-          {theme === "light" ? <IoMoonOutline /> : <IoSunnyOutline />}
+          {theme === "light" ? (
+            <BsFillMoonStarsFill />
+          ) : (
+            <IoSunnyOutline className="text-yellow-400" />
+          )}
         </button>
         {initialLoading && status === "loading" ? (
           <div className="pr-10">
@@ -83,12 +88,22 @@ const Header = () => {
             <Button onClick={() => signOut()} variant="destructive">
               Logout
             </Button>
-            <Link href="/profile">
-              <Avatar>
-                <AvatarImage src={session?.user?.image || ""} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </Link>{" "}
+            <div className="relative">
+              <Link
+                href="/profile"
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content="Profile"
+              >
+                <Avatar>
+                  <AvatarImage src={session?.user?.image || ""} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </Link>{" "}
+              <ReactTooltip
+                style={{ fontSize: "12px", color: "white" }}
+                id="my-tooltip"
+              />
+            </div>
             <div>
               <HoverCard>
                 <HoverCardTrigger>
