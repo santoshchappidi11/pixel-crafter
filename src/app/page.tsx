@@ -33,7 +33,7 @@ export default function Home() {
           {" "}
           <Link href="/create">
             {" "}
-            <Button className="relative mt-5 py-7 px-8 text-base font-bold bg-violet-800 hover:bg-violet-700 text-white overflow-hidden group">
+            <Button className="relative mt-5 py-7 px-8 text-base font-semibold bg-violet-800 hover:bg-violet-700 text-white overflow-hidden group">
               Start Crafting <FaArrowRight className="ml-2" />
               {/* Shine effect */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform translate-x-[-150%] transition-all duration-500 ease-in-out group-hover:translate-x-[150%]"></span>

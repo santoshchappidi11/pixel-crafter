@@ -224,8 +224,8 @@ const Page = () => {
     }
   };
 
-  const skeletonBaseColor = isDarkMode == "dark" ? "#333333" : "#e0e0e0"; // Dark mode base color
-  const skeletonHighlightColor = isDarkMode == "dark" ? "#444444" : "#f5f5f5"; // Dark mode highlight color
+  const skeletonBaseColor = isDarkMode == "dark" ? "#1f073f" : "#e0e0e0"; // Dark mode base color
+  const skeletonHighlightColor = isDarkMode == "dark" ? "#2b0b54" : "#f5f5f5"; // Dark mode highlight color
 
   return (
     <div className="h-full w-full pt-28  flex justify-center items-start flex-col p-6 relative dark:bg-gradient-to-r from-transparent via-violet-800/40 to-transparent">
@@ -271,14 +271,14 @@ const Page = () => {
                               <BiLoaderCircle className="animate-spin text-yellow-500 mr-1" />
                             </>
                           ) : (
-                            <div className="relative ">
+                            <div className="relative">
                               <BsStars
                                 size={25}
                                 className={`${
                                   isLoading
                                     ? "pointer-events-none text-gray-300"
                                     : "pointer-events-auto text-gray-900"
-                                } cursor-pointer hover:text-yellow-500 transition-all`}
+                                } cursor-pointer hover:text-yellow-500 transition-all focus:outline-none`}
                                 data-tooltip-id="my-tooltip"
                                 data-tooltip-content="Enhance prompt with AI"
                                 onClick={() =>
@@ -330,7 +330,7 @@ const Page = () => {
             </Form>
           </div>
         </div>
-        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative xl:h-[650px] h-auto p-5">
+        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative h-[650px] p-5">
           {!outputImg ? (
             <>
               {!isLoading ? (
@@ -338,17 +338,16 @@ const Page = () => {
                   Enter your prompt and hit generate!
                 </div>
               ) : (
-                <div className="relative w-full h-[700px] flex justify-center items-center">
-                  {/* Skeleton */}
-                  <Skeleton
-                    width="100%"
-                    height="100%"
-                    baseColor={skeletonBaseColor}
-                    highlightColor={skeletonHighlightColor}
-                    className="absolute top-0 left-0 z-10"
-                  />
-
-                  <span className="relative z-20 text-lg font-medium text-gray-600 dark:text-white">
+                <div className="relative w-full h-full flex justify-center items-center rounded-lg">
+                  {/* Skeleton Wrapper */}
+                  <div className="absolute inset-0 w-full h-full rounded-lg">
+                    <Skeleton
+                      baseColor={skeletonBaseColor}
+                      highlightColor={skeletonHighlightColor}
+                      className="w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <span className="relative z-20 text-lg font-medium text-gray-600 dark:text-violet-300">
                     Generating...
                   </span>
                 </div>
