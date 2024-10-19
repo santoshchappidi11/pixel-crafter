@@ -331,7 +331,7 @@ const Page = () => {
           </div>
         </div>
         <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative h-[650px] p-5">
-          {!outputImg ? (
+          {!outputImg || isLoading ? (
             <>
               {!isLoading ? (
                 <div className="w-full h-[700px] flex justify-center items-center dark:text-white/70 text-gray-500 p-3">
