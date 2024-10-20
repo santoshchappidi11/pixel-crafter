@@ -124,9 +124,12 @@ const Page = () => {
   }
 
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[72px] px-4">
       {!isLoading && posts?.length > 0 && (
-        <div className="w-full flex justify-end items-center px-3">
+        <div className="w-full flex justify-between items-center px-3">
+          <span className="dark:text-gray-400 text-lg dark:bg-gray-800 bg-gray-200 px-2 rounded-lg">
+            History
+          </span>
           <Button variant="destructive" onClick={handleDeleteAllPosts}>
             Delete All
           </Button>
