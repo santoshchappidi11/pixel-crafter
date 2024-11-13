@@ -330,7 +330,11 @@ const Page = () => {
             </Form>
           </div>
         </div>
-        <div className="__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative h-[650px] p-5">
+        <div
+          className={`__output flex-[1] xl:flex justify-between items-center dark:bg-gray-900 bg-gray-100 rounded-lg relative xl:h-[650px] p-5 ${
+            isLoading ? "h-[650px]" : "h-auto"
+          } `}
+        >
           {!outputImg || isLoading ? (
             <>
               {!isLoading ? (

@@ -43,12 +43,16 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 1 }}
+          className="border-4 hover:dark:border-violet-800 hover:border-violet-600 rounded-lg flex justify-center items-center mt-5"
         >
           {" "}
           <Link href="/create">
             {" "}
-            <Button className="relative mt-5 py-7 px-8 text-base font-semibold bg-violet-800 hover:bg-violet-700 text-white overflow-hidden group">
-              Start Crafting <FaArrowRight className="ml-2" />
+            <Button className="relative m-1 py-7 px-8 text-base font-semibold bg-violet-800 hover:bg-violet-700 text-white overflow-hidden group">
+              Start Crafting
+              <span className="ml-2 transition-transform transform group-hover:scale-125 duration-200 ease-in-out">
+                <FaArrowRight />
+              </span>
               {/* Shine effect */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform translate-x-[-150%] transition-all duration-500 ease-in-out group-hover:translate-x-[150%]"></span>
             </Button>
