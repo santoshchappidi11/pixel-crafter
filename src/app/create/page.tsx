@@ -218,7 +218,7 @@ const Page = () => {
       }
     } else {
       toast({
-        variant: "destructive",
+        variant: "success",
         description: "Please enter something to do the magic! ✨",
       });
     }
@@ -347,7 +347,7 @@ const Page = () => {
                       className="w-full h-full rounded-lg"
                     />
                   </div>
-                  <span className="relative z-20 text-lg font-medium text-gray-600 dark:text-violet-300">
+                  <span className="relative z-20 text-lg font-medium text-violet-800 dark:text-violet-300">
                     Generating...
                   </span>
                 </div>

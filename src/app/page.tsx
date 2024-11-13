@@ -34,7 +34,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="dark:text-white/60 w-full text-center text-wrap sm:px-0 px-5"
+          className="dark:text-white/60 text-gray-500 w-full text-center text-wrap sm:px-0 px-5"
         >
           Create breathtaking images from text with cutting-edge AI technology,
           completely free.
@@ -62,7 +62,7 @@ export default function Home() {
           className="mt-10 w-full overflow-hidden relative"
         >
           <div
-            className={`banner-wrapper flex ${
+            className={`banner-wrapper flex add-transition ${
               hasLoaded ? "animate-slide" : ""
             }`}
           >
@@ -72,7 +72,7 @@ export default function Home() {
                 <div key={i} className="relative h-52 w-60 flex-shrink-0">
                   <Image src={banner} alt="banner" height={500} width={500} />
                   {/* Black overlay */}
-                  <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30 hover:opacity-0"></div>
                 </div>
               ))}
 
@@ -82,7 +82,7 @@ export default function Home() {
                 <div key={i} className="relative h-52 w-60 flex-shrink-0">
                   <Image src={banner} alt="banner" height={500} width={500} />
                   {/* Black overlay */}
-                  <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30 hover:opacity-0"></div>
                 </div>
               ))}
           </div>

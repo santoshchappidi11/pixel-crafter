@@ -114,7 +114,7 @@ const Header = () => {
                 </HoverCardTrigger>
 
                 <HoverCardContent>
-                  <div className="flex flex-col space-y-2 justify-start items-center w-full bg-gray-950 ">
+                  <div className="flex flex-col space-y-2 justify-start items-center w-full dark:bg-gray-950 ">
                     <Link
                       href="/history"
                       className="dark:hover:bg-gray-900 hover:bg-gray-100 p-2 rounded-md flex justify-start items-center w-full"

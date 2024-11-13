@@ -146,18 +146,22 @@ body {
 /* The wrapper that holds all the images */
 .banner-wrapper {
   display: flex;
-  width: 200%; /* Container is double the width to hold both original and duplicate images */
+  width: 235%; /* Container is double the width to hold both original and duplicate images */
   position: relative;
 }
 
 /* Apply the sliding animation once the page is fully loaded */
 .banner-wrapper.animate-slide {
-  animation: slide 20s linear infinite; /* Slide animation lasts 20s and loops infinitely */
+  animation: slide 150s linear infinite; /* Slide animation lasts 20s and loops infinitely */
 }
 
 /* Adjust animation speed for smaller screens */
 @media (max-width: 640px) {
   .banner-wrapper.animate-slide {
-    animation: slide 15s linear infinite; /* Faster sliding for mobile */
+    animation: slide 60s linear infinite; /* Faster sliding for mobile */
   }
+}
+
+.add-transition {
+  transition: all 0.5s ease-in-out;
 }
