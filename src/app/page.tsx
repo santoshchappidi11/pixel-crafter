@@ -43,7 +43,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 1 }}
-          className="border-4 hover:dark:border-violet-800 hover:border-violet-600 rounded-lg flex justify-center items-center mt-5"
+          className="border-4 hover:dark:border-violet-800 hover:border-violet-600 rounded-lg flex justify-center items-center mt-5 add-transition"
         >
           {" "}
           <Link href="/create">
